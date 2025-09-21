@@ -1,26 +1,18 @@
 version: "3.8"
 
 services:
-  # Serviço do LocalStack que simula a AWS
   localstack:
     image: localstack/localstack:latest
     container_name: localstack_notificador
     ports:
-      # A porta 4566 é a porta principal para interagir com os serviços da AWS
       - "4566:4566"
     environment:
-      # Definimos explicitamente quais serviços queremos simular.
-      # Para o nosso caso, são SQS e SNS.
       - SERVICES=sqs,sns,s3
       - AWS_DEFAULT_REGION=us-east-1
-      # Credenciais "dummy" para o ambiente local
       - AWS_ACCESS_KEY_ID=test
       - AWS_SECRET_ACCESS_KEY=test
     volumes:
-      # Este volume monta o nosso script de inicialização para dentro do container.
-      # O LocalStack executa automaticamente qualquer script .sh que estiver nesta pasta.
       - ./init-aws.sh:/etc/localstack/init/ready.d/init-aws.sh
-      # Volume para manter os dados do LocalStack entre reinicializações (opcional, mas recomendado)
       - localstack_data:/var/lib/localstack
 
 volumes:
