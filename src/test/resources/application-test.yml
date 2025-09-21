@@ -1,0 +1,11 @@
+spring:
+  cloud:
+    aws:
+      sqs:
+        listener:
+          auto-startup: false
+aws:
+  sqs:
+    queue-name: "fila-teste-inicializacao"
+  sns:
+    topic-arn: "arn:aws:sns:us-east-1:000000000000:topico-teste-inicializacao"

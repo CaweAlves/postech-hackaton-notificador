@@ -15,7 +15,7 @@ public class SqsListenerAdapter {
 
     @SqsListener("${aws.sqs.queue-name}")
     public void receberMensagem(MensagemDTO mensagem) {
-        log.info("Adaptador SQS recebeu a mensagem: " + mensagem);
+        log.info("Adaptador SQS recebeu a mensagem: {}", mensagem);
         enviarNotificacaoUseCase.enviarNotificacao(mensagem.idDoUsuario(), mensagem.localizacaoArquivoZip());
     }
 }
