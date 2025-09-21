@@ -4,6 +4,7 @@ import io.awspring.cloud.sns.core.SnsTemplate;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.fiap.notificador.application.port.driven.EnvioNotificacao;
+import org.fiap.notificador.domain.exception.FalhaComunicacaoException;
 import org.fiap.notificador.domain.model.Notificacao;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.stereotype.Component;
@@ -24,7 +25,8 @@ public class SnsNotificacaoAdapter implements EnvioNotificacao {
             snsTemplate.sendNotification(this.arnTopicoSns, notificacao.getMensagem(), notificacao.getAssunto());
             log.info("Adaptador SNS publicou a notificação com sucesso.");
         } catch (Exception e) {
-            log.error("Erro ao publicar notificação no SNS: " + e.getMessage());
+            log.error("Erro ao publicar notificação no SNS: {}", e.getMessage());
+            throw new FalhaComunicacaoException("Falha ao enviar notificação via SNS.", e);
         }
     }
 }
