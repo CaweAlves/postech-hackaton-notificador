@@ -10,9 +10,7 @@ spring:
 
 aws:
   sqs:
-    queue-name: "zips-gerados-queue"
-  sns:
-    topic-arn: "arn:aws:sns:us-east-1:000000000000:notificacoes-topico"
+    queue-name: ${SQS_QUEUE_NAME}
 
 ---
 # ===================================================================
@@ -31,21 +29,24 @@ spring:
         secret-key: test
       region:
         static: us-east-1
+aws:
+  sqs:
+    queue-name: "zips-gerados-queue"
+  sns:
+    topic-arn: "arn:aws:sns:us-east-1:000000000000:notificacoes-topico"
 
 ---
 # ===================================================================
-# Perfil 'prod' - Para Produção (exemplo)
+# Perfil 'prod' - Para Produção
 # ===================================================================
 spring:
   config:
     activate:
       on-profile: "prod"
-
-cloud:
-  aws:
-    region:
-      static: ${AWS_REGION:us-east-1}
-
+  cloud:
+    aws:
+      region:
+        static: ${AWS_REGION:us-east-1}
 aws:
   sns:
     topic-arn: ${SNS_TOPIC_ARN}
