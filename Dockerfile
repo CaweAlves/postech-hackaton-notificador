@@ -1,25 +1,13 @@
-FROM maven:3.9.6-eclipse-temurin-21 AS build
+FROM eclipse-temurin:21-jre
 
 WORKDIR /app
 
-COPY pom.xml .
-RUN mvn dependency:go-offline
+RUN groupadd -r appgroup && useradd -r -g appgroup -s /bin/nologin appuser
 
-COPY src ./src
+COPY target/*.jar app.jar
 
-RUN mvn clean install
+RUN chown appuser:appgroup app.jar
 
-FROM eclipse-temurin:21-jre-alpine
+USER appuser
 
-WORKDIR /app
-
-ARG JAR_FILE=target/*.jar
-
-COPY --from=build /app/${JAR_FILE} app.jar
-
-EXPOSE 8082
-
-RUN addgroup -S spring && adduser -S spring -G spring
-USER spring:spring
-
-ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+ENTRYPOINT ["java", "-jar", "app.jar"]
