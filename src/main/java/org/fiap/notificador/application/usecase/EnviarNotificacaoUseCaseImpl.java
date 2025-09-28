@@ -3,7 +3,10 @@ package org.fiap.notificador.application.usecase;
 import lombok.extern.slf4j.Slf4j;
 import org.fiap.notificador.application.port.driven.EnvioNotificacao;
 import org.fiap.notificador.application.port.driver.EnviarNotificacaoUseCase;
+import org.fiap.notificador.domain.model.Job;
 import org.fiap.notificador.domain.model.Notificacao;
+
+import static org.fiap.notificador.domain.model.JobStatus.COMPLETED;
 
 @Slf4j
 public class EnviarNotificacaoUseCaseImpl implements EnviarNotificacaoUseCase {
@@ -15,14 +18,24 @@ public class EnviarNotificacaoUseCaseImpl implements EnviarNotificacaoUseCase {
     }
 
     @Override
-    public void enviarNotificacao(String idDoUsuario, String localizacaoDoArquivo) {
-        String assunto = "Seu vídeo foi processado!";
-        String corpoDaMensagem = String.format(
-                "Olá, usuário %s! Seu vídeo foi processado com sucesso e está em: %s",
-                idDoUsuario, localizacaoDoArquivo
-        );
+    public void enviarNotificacao(Job job) {
+        String assunto;
+        String corpoDaMensagem;
+        if (COMPLETED.equals(job.getStatus())) {
+            assunto = "Seu vídeo foi processado!";
+            corpoDaMensagem = String.format(
+                    "Olá! Seu vídeo foi processado com sucesso e está em: %s",
+                    job.getResultObject()
+            );
+        } else {
+            assunto = "Ocorreu um erro ao processar seu vídeo!";
+            corpoDaMensagem = String.format(
+                    "Olá! Ocorreu um erro ao processar seu vídeo: %s",
+                    job.getErrorMsg()
+            );
+        }
 
-        Notificacao notificacao = new Notificacao(idDoUsuario, assunto, corpoDaMensagem);
+        Notificacao notificacao = new Notificacao(job.getUser().getEmail(), assunto, corpoDaMensagem);
 
         this.envioNotificacao.enviar(notificacao);
 

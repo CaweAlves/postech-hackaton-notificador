@@ -1,4 +1,4 @@
-package org.fiap.notificador.infrastructure.adapter.sns;
+package org.fiap.notificador.infrastructure.adapter.mail;
 
 import io.awspring.cloud.sns.core.SnsTemplate;
 import org.fiap.notificador.domain.exception.FalhaComunicacaoException;
@@ -18,13 +18,13 @@ import static org.mockito.Mockito.doThrow;
 import static org.mockito.Mockito.verify;
 
 @ExtendWith(MockitoExtension.class)
-class SnsNotificacaoAdapterTest {
+class MailAdapterTest {
 
     @Mock
     private SnsTemplate snsTemplate;
 
     @InjectMocks
-    private SnsNotificacaoAdapter snsAdapter;
+    private MailAdapter snsAdapter;
 
     @BeforeEach
     void setUp() {
